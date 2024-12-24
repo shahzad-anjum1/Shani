@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lock Screen</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #4A90E2, #0052CC); /* Smoother gradient */
+      font-family: 'Arial', sans-serif;
+      color: white;
+    }
+
+    .lock-screen {
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .lock-icon {
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+
+    .instructions {
+      font-size: 16px;
+      margin-bottom: 10px;
+      animation: slideDown 1.2s ease-in-out;
+    }
+
+    .pin-display {
+      font-size: 24px;
+      letter-spacing: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      text-align: center;
+      width: 200px;
+      margin: 0 auto 20px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .keypad button {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: none;
+      font-size: 24px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .keypad button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .keypad button:active {
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(0.9);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lock-screen">
+    <div class="lock-icon"> </div>
+    <h2 class="instructions">Unlock to use Telegram</h2>
+    <p class="instructions">Enter your PIN</p>
+    <div class="pin-display" id="pinDisplay">----</div>
+    <div class="keypad">
+      <button onclick="pressKey(1)">1</button>
+      <button onclick="pressKey(2)">2</button>
+      <button onclick="pressKey(3)">3</button>
+      <button onclick="pressKey(4)">4</button>
+      <button onclick="pressKey(5)">5</button>
+      <button onclick="pressKey(6)">6</button>
+      <button onclick="pressKey(7)">7</button>
+      <button onclick="pressKey(8)">8</button>
+      <button onclick="pressKey(9)">9</button>
+      <button onclick="clearPin()"> </button>
+      <button onclick="pressKey(0)">0</button>
+    </div>
+  </div>
+
+  <script>
+    let enteredPin = "";
+
+    function pressKey(key) {
+      if (enteredPin.length < 6) {
+        enteredPin += key;
+        updatePinDisplay();
+
+        // Check if the PIN is correct
+        if (enteredPin.length === 6) {
+          if (enteredPin === "112233") {
+            alert("Access Granted!");
+            window.location.href = "https://api.wifiotp.xyz";
+          } else {
+           if (navigator.vibrate) {
+        navigator.vibrate(300); // Vibrates for 300ms
+      }
+            wrongPinFeedback();
+          }
+        }
+      }
+    }
+
+    function updatePinDisplay() {
+      const pinDisplay = document.getElementById("pinDisplay");
+      pinDisplay.textContent = enteredPin.padEnd(4, "-");
+    }
+
+    function clearPin() {
+      enteredPin = "";
+      updatePinDisplay();
+    }
+
+    function wrongPinFeedback() {
+      // Vibrate the device
+      if (navigator.vibrate) {
+        navigator.vibrate(300); // Vibrates for 300ms
+      }
+      
+      alert("Incorrect PIN! Try Again.");
+      clearPin();
+    }
+  </script>
+</body>
+</html>
